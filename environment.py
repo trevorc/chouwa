@@ -1,5 +1,5 @@
 '''
-Create a Jinja2 Environment object and 
+Create a Jinja2 Environment object and install filters and globals.
 
 Requires a django setting `PROJECT_ROOT` which the parent directory of a
 directory called "templates" which contains the site-wide common
