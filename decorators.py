@@ -21,6 +21,34 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+'''
+Applications can add their own global objects and filters to the jinja2
+environment. This is accomplished by creating a module ``jinjaglobals`` 
+inside an installed application, and marking the desired globals in that
+module with one of the decorators below. Note that the globals and
+filters are not actually namespaced by application: all applications can
+see globals added by any application. For an example, see below:
+
+.. python::
+
+    from time import time as time_
+
+    from chouwa.decorators import jinjaglobal, jinjafilter
+
+    @jinjafilter
+    def add_five(value):
+        return value + 5
+
+    @jinjaglobal
+    def time():
+        return time_()
+
+This example adds a filter `add_five` which retuns the value passed to
+it with 5 added, and adds a global `time` which returns the current unix
+timestamp.
+
+'''
+
 def jinjaglobal(function):
     '''
     Mark a callable as a jinja global.
@@ -32,7 +60,9 @@ def jinjaglobal(function):
 
 def jinjafilter(function):
     '''
-    Mark a callable as a jinja filter.
+    Mark a callable as a `jinja filter`_.
+
+    _`jinja filter`: http://jinja.pocoo.org/2/documentation/api#custom-filters
 
     '''
 

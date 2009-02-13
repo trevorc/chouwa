@@ -21,9 +21,30 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+'''
+The following views are provided to facilitate the use of jinja
+templates for django error pages. They serve as replacements for
+`django.views.defaults.page_not_found` and
+`django.views.defaults.server_error`.
+
+To use these views in your project, add the following line to your root
+URLconf after ``from django.conf.urls.defaults import *``. The module
+`django.conf.urls.defaults` includes default 404 and 500 handlers, thus
+it is necessary to import the chouwa handlers after an ``import *`` from
+the django module.
+
+.. python::
+
+    from chouwa.views import handler404, handler500
+
+'''
+
 from django.http import HttpResponseNotFound, HttpResponseServerError
 
 from chouwa.loader import get_template
+
+handler404 = 'chouwa.views.page_not_found'
+handler500 = 'chouwa.views.server_error'
 
 def page_not_found(request, template_name='404.html'):
     t = get_template(template_name)

@@ -24,9 +24,10 @@
 '''
 Create a Jinja2 Environment object and install filters and globals.
 
-Requires a django setting `PROJECT_ROOT` which the parent directory of a
-directory called "templates" which contains the site-wide common
-templates.
+If project-wide templates are desired, chouwa needs a setting
+`PROJECT_ROOT` which is a string containing the path of the parent
+directory of a directory called "templates" which contains the
+project-wide common templates.
 
 '''
 
@@ -86,8 +87,12 @@ def make_environment():
 
     '''
 
-    searchpath = (os.path.join(settings.PROJECT_ROOT, 'templates'),) + \
-                 app_template_dirs
+    if hasattr(settings, 'PROJECT_ROOT'):
+        searchpath = (
+            os.path.join(settings.PROJECT_ROOT, 'templates'),
+        ) + app_template_dirs
+    else:
+        searchpath = app_template_dirs
     env = Environment(loader=FileSystemLoader(searchpath),
                       autoescape=True, extensions=(i18n,),
                       auto_reload=settings.TEMPLATE_DEBUG)
@@ -95,4 +100,5 @@ def make_environment():
     env.install_gettext_translations(DjangoTranslator())
     return env
 
+#: The global jinja2 Environment object.
 env = make_environment()

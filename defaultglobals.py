@@ -21,6 +21,14 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+'''
+This module provides a few filters and globals similar to those shipped
+with django but not present in jinja2 by default.
+
+'''
+
+from datetime import datetime
+
 from django.core.urlresolvers import reverse
 from django.utils.dateformat import format
 
@@ -39,6 +47,40 @@ def url(viewname, *args, **kwargs):
 
     return reverse(viewname, *args, **kwargs)
 
+@jinjaglobal
+def now(format_string):
+    '''
+    Displays the date, formatted according to the given string.
+
+    Format specifiers are identical to those understood by PHP's
+    ``date()`` function. See <http://php.net/date>.
+
+    Sample usage::
+
+        It is {{ now("F jS, Y H:i") }}.
+
+    Based on `django.template.defaulttags.now`.
+
+    :Parameters:
+      format_string : str
+        The PHP ``date()``-style format specifier.
+
+    '''
+
+    return format(datetime.now(), format_string)
+
 @jinjafilter
-def date(value, format_string):
-    return format(value, format_string)
+def date(dt, format_string):
+    '''
+    Format a date using the PHP ``date()`` format specifiers. Similar to
+    the `now` function, except that it formats an arbitrary date.
+
+    :Parameters:
+      dt : `datetime.datetime`
+        The datetime object to format.
+      format_string : str
+        The PHP ``date()``-style format specifier.
+
+    '''
+
+    return format(dt, format_string)

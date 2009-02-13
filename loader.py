@@ -23,6 +23,15 @@
 
 # Based on djangojinja2.py by Armin Ronacher.
 
+'''
+This module provides a partially-compatible replacement for
+`django.template.loader`. Included functions are `get_template`,
+`select_template`, and `render_to_string`. The former two are useful for
+loading template objects, whereas the latter is useful for rendering a
+template given a context.
+
+'''
+
 from django.template import TemplateDoesNotExist
 from django.template.context import get_standard_processors
 from jinja2 import TemplateNotFound
@@ -33,8 +42,8 @@ def get_template(template_name, globals=None):
     """Load a template."""
     try:
         return env.get_template(template_name, globals=globals)
-    except TemplateNotFound, e:
-        raise TemplateDoesNotExist(str(e))
+    except TemplateNotFound, err:
+        raise TemplateDoesNotExist(str(err))
 
 def select_template(templates, globals=None):
     """Try to load one of the given templates."""
