@@ -37,15 +37,18 @@ import sys
 
 from django.conf import settings
 from django.template.loaders.app_directories import app_template_dirs
-from django.utils.translation import ugettext, ungettext
+from django.utils import translation
 from jinja2 import Environment, FileSystemLoader
 from jinja2.ext import i18n
 
 from chouwa import defaultglobals
 
 class DjangoTranslator(object):
-    ungettext = ungettext
-    ugettext = ugettext
+    def ugettext(self, *args):
+        return translation.ugettext(*args)
+
+    def ungettext(self, *args):
+        return translation.ungettext(*args)
 
 def get_app_modules():
     '''
