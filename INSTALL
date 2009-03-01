@@ -1,0 +1,13 @@
+To install chouwa, run the following command from the mercurial
+repository::
+
+    python setup.py install
+
+This will install chouwa to the default location on your system. On an
+Ubuntu system, this might be /usr/lib/python2.5/site-packages. To
+install to a different directory, supply setup.py with the ``--prefix``
+option. For details, refer to the python setuptools documentation.
+
+Alternatively, you can copy or symlink the ``chouwa`` subdirectory to a
+directory on your python path. This facilitates updating through
+mercurial.

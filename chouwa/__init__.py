@@ -62,3 +62,5 @@ documentation on the creation of custom filters and globals, see the
    http://jinja.pocoo.org/2/documentation/api#custom-filters
 
 '''
+
+__version__ = (0, 1, 0)
