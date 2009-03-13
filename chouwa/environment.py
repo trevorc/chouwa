@@ -24,10 +24,9 @@
 '''
 Create a Jinja2 Environment object and install filters and globals.
 
-If project-wide templates are desired, chouwa needs a setting
-`PROJECT_ROOT` which is a string containing the path of the parent
-directory of a directory called "templates" which contains the
-project-wide common templates.
+Templates will be searched for by default in template subdirectories
+of installed applications and then in directories listed in the
+``TEMPLATE_DIRS`` setting.
 
 '''
 
@@ -90,12 +89,7 @@ def make_environment():
 
     '''
 
-    if hasattr(settings, 'PROJECT_ROOT'):
-        searchpath = (
-            os.path.join(settings.PROJECT_ROOT, 'templates'),
-        ) + app_template_dirs
-    else:
-        searchpath = app_template_dirs
+    searchpath = app_template_dirs + settings.TEMPLATE_DIRS
     env = Environment(loader=FileSystemLoader(searchpath),
                       autoescape=True, extensions=(i18n,),
                       auto_reload=settings.TEMPLATE_DEBUG)
