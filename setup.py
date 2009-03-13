@@ -1,8 +1,10 @@
 from setuptools import setup
 
+from chouwa import __version__
+
 setup(
     name='chouwa',
-    version='0.1',
+    version='.'.join(str(bit) for bit in __version__),
     url='http://bitbucket.org/trevor/chouwa',
     description='Django & Jinja2 integration',
     author='Trevor Caira',

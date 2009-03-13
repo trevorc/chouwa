@@ -63,4 +63,4 @@ documentation on the creation of custom filters and globals, see the
 
 '''
 
-__version__ = (0, 1, 0)
+__version__ = (0, 1, 1)
