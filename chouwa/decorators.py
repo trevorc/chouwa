@@ -68,3 +68,14 @@ def jinjafilter(function):
 
     function.is_jinja_filter = True
     return function
+
+def jinjatest(function):
+    '''
+    Mark a callable as a `jinja test`_.
+
+    _`jinja test`: http://jinja.pocoo.org/2/documentation/api#writing-tests
+
+    '''
+
+    function.is_jinja_test = True
+    return function

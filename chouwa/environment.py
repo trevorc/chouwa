@@ -82,6 +82,8 @@ def install_globals(env):
                 env.globals[name] = global_
             elif getattr(global_, 'is_jinja_filter', False):
                 env.filters[name] = global_
+            elif getattr(global_, 'is_jinja_test', False):
+                env.tests[name] = global_
 
 def make_environment():
     '''
