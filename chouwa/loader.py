@@ -32,30 +32,20 @@ template given a context.
 
 '''
 
-from django.template import loader
-from django.template import TemplateDoesNotExist
 from django.template.context import get_standard_processors
-from jinja2 import TemplateNotFound
+from jinja2 import TemplateNotFound, TemplateSyntaxError
 
 from chouwa.environment import env
 
 def get_template(template_name, globals=None):
     """Load a template."""
-    try:
-        return env.get_template(template_name, globals=globals)
-    except TemplateNotFound, err:
-        if loader.template_source_loaders is None:
-            loader.template_source_loaders = ()
-        raise TemplateDoesNotExist(str(err))
+    return env.get_template(template_name, globals=globals)
 
 def select_template(templates, globals=None):
     """Try to load one of the given templates."""
     for template in templates:
-        try:
-            return env.get_template(template, globals=globals)
-        except TemplateNotFound:
-            continue
-    raise TemplateDoesNotExist(', '.join(templates))
+        return env.get_template(template, globals=globals)
+    raise TemplateNotFound(', '.join(templates))
 
 def render_to_string(template_name, context=None, request=None):
     """Render a template into a string."""
@@ -65,4 +55,9 @@ def render_to_string(template_name, context=None, request=None):
         context['request'] = request
         for processor in get_standard_processors():
             context.update(processor(request))
-    return get_template(template_name).render(context)
+    try:
+        return get_template(template_name).render(context)
+    except TemplateSyntaxError, e:
+        if hasattr(e, 'source'):
+            delattr(e, 'source')
+        raise
