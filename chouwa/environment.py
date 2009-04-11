@@ -28,6 +28,16 @@ Templates will be searched for by default in template subdirectories
 of installed applications and then in directories listed in the
 ``TEMPLATE_DIRS`` setting.
 
+The default environment settings can be overridden by creating a Django
+setting ``JINJA2_ENVIRONMENT_OPTIONS``, which is a dictionary of
+parameter to pass to `jinja2.Environment`. For example, to enable strict
+undefined handling, one could set:
+
+.. python::
+    from jinja2 import StrictUndefined
+
+    JINJA2_ENVIRONMENT_OPTIONS = {'undefined': StrictUndefined}
+
 '''
 
 from itertools import chain
@@ -92,9 +102,11 @@ def make_environment():
     '''
 
     searchpath = app_template_dirs + settings.TEMPLATE_DIRS
-    env = Environment(loader=FileSystemLoader(searchpath),
-                      autoescape=True, extensions=(i18n,),
-                      auto_reload=settings.TEMPLATE_DEBUG)
+    env_options = {'loader': FileSystemLoader(searchpath),
+                   'autoescape': True, 'extensions': (i18n,),
+                   'auto_reload': settings.TEMPLATE_DEBUG}
+    env_options.update(getattr(settings, 'JINJA2_ENVIRONMENT_OPTIONS', {}))
+    env = Environment(**env_options)
     install_globals(env)
     env.install_gettext_translations(DjangoTranslator())
     return env
