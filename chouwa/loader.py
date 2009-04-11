@@ -38,6 +38,12 @@ import jinja2
 from chouwa.environment import env
 
 class TemplateSyntaxError(jinja2.TemplateSyntaxError):
+    def __init__(self, message, lineno, name, filename):
+        jinja2.TemplateError.__init__(self, message)
+        self.lineno = lineno
+        self.name = name
+        self.filename = filename
+
     def __unicode__(self):
         location = 'line %d' % self.lineno
         name = self.filename or self.name
