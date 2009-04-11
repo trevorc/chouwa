@@ -32,6 +32,7 @@ template given a context.
 
 '''
 
+from django.template import loader
 from django.template import TemplateDoesNotExist
 from django.template.context import get_standard_processors
 from jinja2 import TemplateNotFound
@@ -43,6 +44,8 @@ def get_template(template_name, globals=None):
     try:
         return env.get_template(template_name, globals=globals)
     except TemplateNotFound, err:
+        if loader.template_source_loaders is None:
+            loader.template_source_loaders = ()
         raise TemplateDoesNotExist(str(err))
 
 def select_template(templates, globals=None):
