@@ -33,9 +33,17 @@ template given a context.
 '''
 
 from django.template.context import get_standard_processors
-from jinja2 import TemplateNotFound, TemplateSyntaxError
+import jinja2
 
 from chouwa.environment import env
+
+class TemplateSyntaxError(jinja2.TemplateSyntaxError):
+    def __unicode__(self):
+        location = 'line %d' % self.lineno
+        name = self.filename or self.name
+        if name:
+            location = 'File "%s", %s' % (name, location)
+        return u'\n'.join([self.message, '  ' + location])
 
 def get_template(template_name, globals=None):
     """Load a template."""
@@ -45,7 +53,7 @@ def select_template(templates, globals=None):
     """Try to load one of the given templates."""
     for template in templates:
         return env.get_template(template, globals=globals)
-    raise TemplateNotFound(', '.join(templates))
+    raise jinja2.TemplateNotFound(', '.join(templates))
 
 def render_to_string(template_name, context=None, request=None):
     """Render a template into a string."""
@@ -57,7 +65,5 @@ def render_to_string(template_name, context=None, request=None):
             context.update(processor(request))
     try:
         return get_template(template_name).render(context)
-    except TemplateSyntaxError, e:
-        if hasattr(e, 'source'):
-            delattr(e, 'source')
-        raise
+    except jinja2.TemplateSyntaxError, e:
+        raise TemplateSyntaxError(e.message, e.lineno, e.name, e.filename)
