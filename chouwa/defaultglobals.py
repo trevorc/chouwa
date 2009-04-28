@@ -37,7 +37,7 @@ from chouwa.decorators import jinjaglobal, jinjafilter
 @jinjaglobal
 def url(viewname, *args, **kwargs):
     '''
-    Lookup a url via `django.core.urlresolvers.reverse`.
+    Exactly proxy the API of `django.core.urlresolvers.reverse`.
 
     :Parameters:
       viewname : str
@@ -46,6 +46,24 @@ def url(viewname, *args, **kwargs):
     '''
 
     return reverse(viewname, *args, **kwargs)
+
+@jinjaglobal
+def url2(viewname, *args, **kwargs):
+    '''
+    Lookup a url via `django.core.urlresolvers.reverse`. Positional and
+    keyword arguments to this function are used directly as captures in
+    the URL.
+
+    Use `url` when you need to specify a prefix or urlconf for
+    ``reverse`` or if you have a URL capture named ``viewname``.
+
+    :Parameters:
+      viewname : str
+        The label associated with a url or the dotted path module name
+        of a view.
+    '''
+
+    return reverse(viewname, args=args, kwargs=kwargs)
 
 @jinjaglobal
 def now(format_string):
