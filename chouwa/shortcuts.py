@@ -29,6 +29,8 @@ template rendering. For finer-grained control, see `chouwa.loader`.
 
 '''
 
+from functools import wraps
+
 from django.http import HttpResponse
 
 from chouwa.loader import render_to_string
@@ -59,3 +61,33 @@ def direct_to_template(request, template, extra_context=None,
     return HttpResponse(render_to_string(template, extra_context,
                                          request=request),
                         mimetype=mimetype)
+
+def templated(template, mimetype=None, cache_key=None, cache_timeout=None):
+    '''
+    Decorator for the common use case of templating a view. Instead of
+    returning the result of `direct_to_template` from a view, return
+    the context of the template from the view, and wrap the view with a
+    decorator of the form ``@templated(template_name)``.
+    `django.http.HttpResponse` objects fall through and are not passed
+    to the template engine.
+
+    :Parameters:
+      template : str
+        The path of the template relative to one of the template
+        directories.
+      mimetype : str
+        The Content-type to send to the client.
+
+    '''
+
+    def decorator(view):
+        @wraps(view)
+        def wrapped(request, *args, **kwargs):
+            res = view(request, *args, **kwargs)
+            if res is None:
+                res = {}
+            elif isinstance(res, HttpResponse):
+                return res
+            return direct_to_template(request, template, res, mimetype)
+        return wrapped
+    return decorator
