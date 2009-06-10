@@ -1,0 +1,19 @@
+Source: python-chouwa
+Section: python
+Priority: optional
+Maintainer: Trevor Caira <trevor@caira.com>
+Build-Depends: debhelper (>= 5), python-all-dev (>= 2.3.5-11), python-support (>= 0.6), dpatch
+Standards-Version: 3.7.2
+
+Package: python-chouwa
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}
+Provides: ${python:Provides}
+Description: a Django/Jinja2 integration library.
+  Chouwa is a library which aims to ease the integration of jinja2 into
+  django projects. It does this by providing equivalents of some of
+  django's helper methods which depend on its template subsystem, as well
+  as providing builtin globals and filters and providing a mechanism for
+  user applications to introduce their own globals and filters.
+ .
+  Homepage: http://bitbucket.org/trevor/chouwa/
