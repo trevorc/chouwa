@@ -31,7 +31,6 @@ build-stamp: configure-stamp
 	dh_testdir
 	for py in $(PYVERS); do \
 		$$py setup.py build; \
-		$$py test/runtests.py; \
 	done
 	touch build-stamp
 
